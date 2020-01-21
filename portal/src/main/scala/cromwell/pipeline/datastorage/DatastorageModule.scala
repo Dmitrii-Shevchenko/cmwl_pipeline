@@ -1,20 +1,18 @@
 package cromwell.pipeline.datastorage
 
-import com.softwaremill.macwire._
 import com.typesafe.config.Config
 import cromwell.pipeline.database.PipelineDatabaseEngine
 import cromwell.pipeline.datastorage.dao.entry.{ ProjectEntry, UserEntry }
 import cromwell.pipeline.datastorage.dao.repository.{ ProjectRepository, UserRepository }
 import slick.jdbc.JdbcProfile
 
-@Module
 class DatastorageModule(config: Config) {
-  lazy val pipelineDatabaseEngine: PipelineDatabaseEngine = wireWith(PipelineDatabaseEngine.fromConfig _)
+  lazy val pipelineDatabaseEngine: PipelineDatabaseEngine = new PipelineDatabaseEngine(config)
   lazy val profile: JdbcProfile = pipelineDatabaseEngine.profile
-  lazy val databaseLayer: DatabaseLayer = wire[DatabaseLayer]
+  lazy val databaseLayer: DatabaseLayer = new DatabaseLayer(profile)
 
-  lazy val userRepository: UserRepository = wire[UserRepository] //wires databaseLayer
-  lazy val projectRepository: ProjectRepository = wire[ProjectRepository] //wires databaseLayer
+  lazy val userRepository: UserRepository = new UserRepository(pipelineDatabaseEngine, databaseLayer)
+  lazy val projectRepository: ProjectRepository = new ProjectRepository(pipelineDatabaseEngine, databaseLayer)
 }
 
 trait Profile {

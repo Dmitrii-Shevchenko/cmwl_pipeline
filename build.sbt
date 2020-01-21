@@ -49,7 +49,7 @@ lazy val portal = project
     name := "Portal",
     commonSettings,
     Defaults.itSettings,
-    libraryDependencies ++= akkaDependencies ++ testDependencies ++ jsonDependencies ++ macwire ++ testContainers,
+    libraryDependencies ++= akkaDependencies ++ testDependencies ++ jsonDependencies ++ testContainers,
     libraryDependencies += cats,
     //TODO need to check out parallel execution
     addCommandAlias("testAll", "; test ; it:test")

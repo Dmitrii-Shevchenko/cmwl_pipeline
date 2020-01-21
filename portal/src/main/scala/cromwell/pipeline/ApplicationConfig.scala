@@ -1,6 +1,5 @@
 package cromwell.pipeline
 
-import com.softwaremill.macwire.Module
 import com.typesafe.config.{ Config, ConfigFactory }
 import pdi.jwt.JwtAlgorithm
 import pdi.jwt.algorithms.JwtHmacAlgorithm
@@ -17,7 +16,6 @@ final case class AuthConfig(
 
 final case class ExpirationTimeInSeconds(accessToken: Long, refreshToken: Long, userSession: Long)
 
-@Module
 class ApplicationConfig(config: Config) {
 
   lazy val webServiceConfig: WebServiceConfig =

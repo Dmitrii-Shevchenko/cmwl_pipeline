@@ -43,6 +43,8 @@ lazy val datasource = project.settings(
   libraryDependencies ++= dbDependencies
 )
 
+lazy val libs = (akkaDependencies ++ testDependencies ++ jsonDependencies ++ testContainers) :+ cats
+
 lazy val portal = project
   .configs(IntegrationTest)
   .settings(
@@ -54,4 +56,26 @@ lazy val portal = project
     //TODO need to check out parallel execution
     addCommandAlias("testAll", "; test ; it:test")
   )
-  .dependsOn(datasource)
+  .aggregate(repositories, services, controllers, utils)
+  .dependsOn(datasource, repositories, services, controllers, utils)
+
+lazy val utils =
+  (project in file("utils")).settings(commonSettings, libraryDependencies ++= libs).configs(IntegrationTest)
+
+lazy val repositories =
+  (project in file("repositories"))
+    .settings(libraryDependencies ++= libs)
+    .configs(IntegrationTest)
+    .dependsOn(datasource, utils)
+
+lazy val services =
+  (project in file("services"))
+    .settings(libraryDependencies ++= libs)
+    .configs(IntegrationTest)
+    .dependsOn(repositories, utils)
+
+lazy val controllers =
+  (project in file("controllers"))
+    .settings(libraryDependencies ++= libs)
+    .configs(IntegrationTest)
+    .dependsOn(services, utils)

@@ -4,9 +4,13 @@ import akka.http.scaladsl.model.StatusCodes
 import akka.http.scaladsl.testkit.ScalatestRouteTest
 import com.dimafeng.testcontainers.{ ForAllTestContainer, PostgreSQLContainer }
 import com.typesafe.config.Config
-import cromwell.pipeline.datastorage.dto.user.{ PasswordUpdateRequest, UserUpdateRequest }
-import cromwell.pipeline.datastorage.dto.{ User, UserNoCredentials }
-import cromwell.pipeline.utils.auth.{ AccessTokenContent, TestContainersUtils, TestUserUtils }
+import cromwell.pipeline.controller.service.datastorage.dto.user.{ PasswordUpdateRequest, UserUpdateRequest }
+import cromwell.pipeline.controller.service.datastorage.dto.{ User, UserNoCredentials }
+import cromwell.pipeline.controller.service.datastorage.utils.auth.{
+  AccessTokenContent,
+  TestContainersUtils,
+  TestUserUtils
+}
 import cromwell.pipeline.ApplicationComponents
 import de.heikoseeberger.akkahttpplayjson.PlayJsonSupport
 import org.scalatest.{ AsyncWordSpec, Matchers }

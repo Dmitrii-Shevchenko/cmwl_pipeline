@@ -6,9 +6,9 @@ import akka.http.scaladsl.testkit.ScalatestRouteTest
 import com.dimafeng.testcontainers.{ ForAllTestContainer, PostgreSQLContainer }
 import com.typesafe.config.Config
 import cromwell.pipeline.controller.AuthController._
-import cromwell.pipeline.datastorage.dto.User
-import cromwell.pipeline.datastorage.dto.auth.{ SignInRequest, SignUpRequest }
-import cromwell.pipeline.utils.auth.{ TestContainersUtils, TestUserUtils }
+import cromwell.pipeline.controller.service.datastorage.dto.User
+import cromwell.pipeline.controller.service.datastorage.dto.auth.{ SignInRequest, SignUpRequest }
+import cromwell.pipeline.controller.service.datastorage.utils.auth.{ TestContainersUtils, TestUserUtils }
 import cromwell.pipeline.ApplicationComponents
 import org.scalatest.compatible.Assertion
 import org.scalatest.concurrent.ScalaFutures._

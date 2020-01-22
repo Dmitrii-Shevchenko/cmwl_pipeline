@@ -20,7 +20,6 @@ object CromwellPipelineApp extends App {
   import components.applicationConfig.webServiceConfig
   import components.controllerModule._
   import components.datastorageModule._
-  import components.utilsModule._
 
   pipelineDatabaseEngine.updateSchema()
 

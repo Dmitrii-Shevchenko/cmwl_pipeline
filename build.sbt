@@ -9,6 +9,8 @@ ThisBuild / scalacOptions := Seq(
   "-Xfatal-warnings"
 )
 
+lazy val IntegrationTest = config("it").extend(Test)
+
 lazy val formatAll = taskKey[Unit]("Format all the source code which includes src, test, and build files")
 lazy val checkFormat = taskKey[Unit]("Check all the source code which includes src, test, and build files")
 
@@ -22,7 +24,9 @@ lazy val commonSettings = Seq(
     (scalafmtCheck in Test).value
   },
   compile in Compile := (compile in Compile).dependsOn(checkFormat).value,
-  test in Test := (test in Test).dependsOn(checkFormat).value
+  test in Test := (test in Test).dependsOn(checkFormat).value,
+  testOptions in Test += Tests.Argument(TestFrameworks.ScalaTest, "-h", "target/test-reports"),
+  testOptions in IntegrationTest += Tests.Argument(TestFrameworks.ScalaTest, "-h", "target/test-reports")
 )
 
 addCommandAlias("fmt", "all scalafmtSbt scalafmt test:scalafmt")
@@ -34,8 +38,6 @@ lazy val root = (project in file("."))
     commonSettings
   )
   .aggregate(portal, datasource)
-
-lazy val IntegrationTest = config("it").extend(Test)
 
 lazy val datasource = project
   .settings(
@@ -50,6 +52,7 @@ lazy val portal = project
   .settings(
     name := "Portal",
     commonSettings,
+    Seq(parallelExecution in Test := false),
     libraryDependencies ++= akkaDependencies ++ jsonDependencies,
     Defaults.itSettings,
     //TODO need to check out parallel execution
@@ -69,7 +72,10 @@ lazy val utils =
 
 lazy val repositories =
   (project in file("repositories"))
-    .settings(libraryDependencies ++= akkaDependencies ++ testDependencies ++ jsonDependencies :+ cats)
+    .settings(
+      libraryDependencies ++= akkaDependencies ++ testDependencies ++ jsonDependencies :+ cats,
+      Seq(parallelExecution in Test := false)
+    )
     .configs(IntegrationTest)
     .dependsOn(datasource, utils % "compile->compile;test->test")
 
@@ -80,5 +86,7 @@ lazy val services =
 
 lazy val controllers =
   (project in file("controllers"))
-    .settings(libraryDependencies ++= akkaDependencies ++ jsonDependencies :+ cats)
+    .settings(
+      libraryDependencies ++= akkaDependencies ++ jsonDependencies :+ cats
+    )
     .dependsOn(services, utils, repositories % "test->test")
